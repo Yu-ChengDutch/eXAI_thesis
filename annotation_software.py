@@ -1,15 +1,11 @@
 # importing various libraries
 import sys
-from PyQt5.QtWidgets import QDialog, QApplication, QPushButton, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QGridLayout, QComboBox, QCheckBox, QStackedWidget, QButtonGroup
+from PyQt5.QtWidgets import QDialog, QApplication, QPushButton, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QGridLayout, QComboBox, QCheckBox, QStackedWidget
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import matplotlib.gridspec as gridspec
-from matplotlib.widgets import Button
-from matplotlib.widgets import RadioButtons
-from matplotlib.backend_bases import MouseButton
 from matplotlib.patches import Rectangle
+from matplotlib.backend_bases import MouseButton
 import numpy as np
 import pandas as pd 
 import os
@@ -97,7 +93,7 @@ class Window(QDialog):
                                                         "Not_selected": []},
                                 
                             "Efflorescentie" : {        "data_dict" : { "Undetermined" : ["Undetermined"],
-                                                                        "Squama": ["Schilfering pityriasiform", "Schilfering psoriasiform", "Schilfering ichtyosiform", "Schilfering keratotisch"],
+                                                                        "Squama": ["Squama"],
                                                                         "Bloeduitstorting": ["Ecchymosis", "Teleangiectasie", "Purpura", "Petechiae"],
                                                                         "Skin defect": ["Vulnus", "Rhagade", "Erosion", "Excoriation", "Fistula", "Ulcus"],
                                                                         "Skin thickening" : ["Tumor", "Vegetation", "Hyperkeratose", "Lichenification", "Urtica", "Plaque"],
@@ -415,8 +411,8 @@ class Window(QDialog):
         self.flat_layout = QVBoxLayout()   
         self.hemispheric_box = QGroupBox()
         self.hemispheric_layout = QVBoxLayout()   
-        self.sharp_box = QGroupBox()
-        self.sharp_layout = QVBoxLayout()     
+        self.sharp_vorm_box = QGroupBox()
+        self.sharp_vorm_layout = QVBoxLayout()     
         self.stemmed_box = QGroupBox()
         self.stemmed_layout = QVBoxLayout()      
         
@@ -551,7 +547,7 @@ class Window(QDialog):
                                                         "Not raised" : [self.not_raised_box, self.not_raised_layout, self.vorm_textuur_stacked],
                                                         "Flat" : [self.flat_box, self.flat_layout, self.vorm_textuur_stacked],
                                                         "Hemispheric" : [self.hemispheric_box, self.hemispheric_layout, self.vorm_textuur_stacked],
-                                                        "Sharp" : [self.sharp_box, self.sharp_layout, self.vorm_textuur_stacked],
+                                                        "Sharp" : [self.sharp_vorm_box, self.sharp_vorm_layout, self.vorm_textuur_stacked],
                                                         "Stemmed" : [self.stemmed_box, self.stemmed_layout, self.vorm_textuur_stacked]},
                              "Rangschikking groep" : {  "Undetermined" : [self.rangschikking_groep_undetermined_box, self.rangschikking_groep_undetermined_layout, self.rangschikking_groep_stacked],
                                                         "Solitary" : [self.solitary_box, self.solitary_layout, self.rangschikking_groep_stacked],
@@ -711,8 +707,8 @@ class Window(QDialog):
         img = mpimg.imread(self.path + 'IM_'+ str(self.im) + '.jpg')
         self.ax.imshow(img, extent=[0, 50, 0, 50])
         
-        self.ax.set_xticks(self.x)
-        self.ax.set_yticks(self.x)
+        self.ax.set_xticks(self.x, labels="")
+        self.ax.set_yticks(self.x, labels="")        
         self.ax.grid(True)
         
         self.ax.figure.canvas.mpl_connect('button_press_event', self.draw_colours)
