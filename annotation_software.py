@@ -1,6 +1,6 @@
 # importing various libraries
 import sys
-from PyQt5.QtWidgets import QDialog, QApplication, QPushButton, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QGridLayout, QComboBox, QCheckBox, QStackedWidget
+from PyQt5.QtWidgets import QDialog, QApplication, QPushButton, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QGridLayout, QComboBox, QCheckBox, QStackedWidget, QLineEdit
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -9,7 +9,6 @@ from matplotlib.backend_bases import MouseButton
 import numpy as np
 import pandas as pd 
 import os
-
    
 # main window
 # which inherits QDialog
@@ -35,94 +34,75 @@ class Window(QDialog):
                                                                         "Neck": ["Neck", "Throat"],
                                                                         "Upper extremity": ["Upper_arm", "Lower_arm", "Elbow", "Wrist", "Hand_palm", "Hand_other"],
                                                                         "Torso": ["Chest", "Upper_back", "Shoulders", "Abdomen", "Lower_back", "Groin", "Genitals", "Buttocks"],
-                                                                        "Lower extremity": ["Upper_leg", "Knee", "Lower_leg", "Foot_sole", "Foot_other"],
+                                                                        "Lower extremity": ["Upper_leg", "Knee", "Lower_leg", "Ankle", "Foot_sole", "Foot_other"],
                                                                         "Whole body": ["Whole body"]},
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                        "Selected" :  []},
                              
                                  "Omvang grootte" : {   "data_dict" : { "Undetermined" : ["Undetermined"],
-                                                                        "Millar": ["Millar"],
-                                                                        "Lenticular": ["Lenticular"],
-                                                                        "Nummular": ["Nummular"],
-                                                                        "Child palm sized": ["Child palm sized"],
-                                                                        "Palm sized": ["Palm_sized"],
-                                                                        "Regional": ["Regional"],
-                                                                        "Generalised": ["Generalised"]},
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                                        "Small": ["Millar", "Lenticular", "Nummular"],
+                                                                        "Large": ["Child palm sized", "Palm sized", "Hand sized"],
+                                                                        "Generalised": ["Regional", "Generalised"]},
+                                                        "Selected" :  []},
                                  
                                 "Omvang aantal" : {     "data_dict" : { "Undetermined" : ["Undetermined"],
                                                                         "One": ["One"],
                                                                         "Few": ["Few"],
                                                                         "Tens": ["Tens"],
                                                                         "Innumerable": ["Innumerable"]},
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                        "Selected" :  []},
                                 
                                 "Vorm vorm" : {         "data_dict" : { "Undetermined" : ["Undetermined"],
-                                                                        "Polycyclic": ["Polyciclic", "Round", "Oval"],
-                                                                        "Polygonal": ["Polygonal", "Rectangle"],
+                                                                        "Circular": ["Polycyclic", "Round", "Oval"],
+                                                                        "Rectangular": ["Polygonal", "Rectangle"],
                                                                         "Linear": ["Linear", "Gyrated"],
-                                                                        "Dendritic": ["Dendritic"],
-                                                                        "Capricious" : ["Capricious"]},
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                                        "Capricious": ["Capricious", "Dendritic"]},
+                                                        "Selected" :  []},
                                 
                                 "Vorm textuur" : {      "data_dict" : { "Undetermined" : ["Undetermined"],
-                                                                        "Not raised": ["Not raised"],
+                                                                        "Elevation": ["Elevated", "Non elevated", "Depressed"],
                                                                         "Flat": ["Flat", "Bumpy", "Pleated", "Wrinkled", "Verrucous", "Raised edge"],
-                                                                        "Hemispheric": ["Hemispheric", "Dome-shaped", "Dome-shaped with crater"],
-                                                                        "Sharp": ["Sharp"],
-                                                                        "Stemmed" : ["Stemmed"]},
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                                        "Bulbous": ["Hemispheric", "Dome-shaped", "Crater"],
+                                                                        "Tall": ["Sharp", "Stemmed"]},
+                                                        "Selected" :  []},
                                 
                                 "Omtrek" : {            "data_dict" : { "Undetermined" : ["Undetermined"],
-                                                                        "Sharp": ["Sharp"],
-                                                                        "Medium sharp": ["Medium sharp"],
-                                                                        "Unsharp": ["Unsharp"]},
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                                        "Sharpness": ["Sharp", "Medium sharp", "Unsharp"],
+                                                                        "Colouration": ["Red outline", "Black outline", "White outline"]},
+                                                        "Selected" :  []},
                                 
                                 "Kleur" : {             "data_dict" : { "Undetermined" : ["Undetermined"],
                                                                         "Skin coloured": ["Skin coloured"],
-                                                                        "Red": ["Light red", "Dark red", "Bright red"],
-                                                                        "Brown": ["Brown", "Light brown", "Dark brown"],
+                                                                        "Red": ["Light red", "Red", "Bright red", "Dark red", ],
+                                                                        "Brown": ["Light brown", "Brown", "Dark brown"],
                                                                         "Abnormal colours" : [ "Black", "Pale or white", "Yellow", "Green", "Orange", "Purple", "Blue"]},
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                        "Selected" :  []},
                                 
                             "Efflorescentie" : {        "data_dict" : { "Undetermined" : ["Undetermined"],
-                                                                        "Squama": ["Squama"],
-                                                                        "Bloeduitstorting": ["Ecchymosis", "Teleangiectasie", "Purpura", "Petechiae"],
-                                                                        "Skin defect": ["Vulnus", "Rhagade", "Erosion", "Excoriation", "Fistula", "Ulcus"],
-                                                                        "Skin thickening" : ["Tumor", "Vegetation", "Hyperkeratose", "Lichenification", "Urtica", "Plaque"],
-                                                                        "Bump on skin" : ["Abces", "Pusula", "Bulla", "Vesicula", "Cyst", "Comedo", "Nodus or papula", "Nodulus"],
-                                                                        "Unraised defects" : ["Dyschromia", "Macula", "Erythema", "Craquelé"],
-                                                                        "Crusta" : ["Crusta"]}, 
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                                        "Rough lesions": ["Squama", "Collerette", "Hyperkeratosis", "Lichenification", "Crusta", "Atrophia", "Craquelé"],
+                                                                        "Depressed lesions": ["Vulnus", "Rhagade", "Erosion", "Excoriation", "Burrow", "Ulcus"],
+                                                                        "Elevated lesions": ["Tumor", "Vegetation", "Urtica", "Plaque", "Hypertrophy"],
+                                                                        "Bulbous lesions" : ["Abces", "Pustula", "Bulla", "Vesicula", "Cyst", "Comedo", "Nodus or papula", "Nodulus"],
+                                                                        "Level lesions" : ["Macula", "Dyschromia", "Erythema", "Teleangiectasia", "Ecchymosis", "Purpura", "Petechia", "Scar"]}, 
+                                                        "Selected" :  []},
                             
                             "Rangschikking groep" : {   "data_dict" : { "Undetermined" : ["Undetermined"],
                                                                         "Solitary": ["Solitary"],
                                                                         "Grouped": ["Discrete group", "Diffuse group", "Confluent group"]}, 
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                        "Selected" :  []},
                             
                             "Rangschikking plaats" : {  "data_dict" : { "Undetermined" : ["Undetermined"],
                                                                         "Regional": ["Regional", "Segmental", "Ptychotropic"],
                                                                         "Generalised": ["Generalised", "Universal"],
                                                                         "Follicular": ["Follicular"]}, 
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},
+                                                        "Selected" :  []},
                             
                             "Rangschikking vorm" : {    "data_dict" : { "Undetermined" : ["Undetermined"],
+                                                                        "Symmetry" : ["Symmetrical", "Assymetrical"],
                                                                         "Linear": ["Linear", "Arciform"], 
                                                                         "Annular": ["Annular", "Circinair", "Concentric", "Cocardic"],
-                                                                        "Corymbiform": ["Corymbiform", "En bouquet"],
+                                                                        "Clustered": ["Corymbiform", "En bouquet"],
                                                                         "Reticular" : ["Reticular"]}, 
-                                                        "Selected" :  [],
-                                                        "Not_selected": []},}
+                                                        "Selected" :  []}}
         
         
         # set the excel  
@@ -162,6 +142,12 @@ class Window(QDialog):
         self.next_button = QPushButton('Next')
         self.next_button.clicked.connect(self.next)
         button_layout.addWidget(self.next_button)
+        ## add lesion button
+        self.textbox = QLineEdit(self)
+        self.textbox.setPlaceholderText("Enter index and press enter to go")
+        self.textbox.resize(280,40)
+        self.textbox.returnPressed.connect(self.go_to)
+        button_layout.addWidget(self.textbox)
         
         # Creating the PROVOKE label box
         provoke_label_box = QGroupBox("PROVOKE - labels")
@@ -195,7 +181,8 @@ class Window(QDialog):
         instructions_layout.addWidget(instructions_box)
         
         ## Adding the instructions
-        instructions_layout.addWidget(QLabel("Left (blue) is background, right (red) is lesion"))        
+        self.instructions_label = QLabel("Left (blue) is background, right (red) is lesion")
+        instructions_layout.addWidget(self.instructions_label)        
         
         # Creating an empty widget
         self.empty_box = QGroupBox()
@@ -289,12 +276,14 @@ class Window(QDialog):
         
         self.rangschikking_vorm_undetermined_box = QGroupBox()
         self.rangschikking_vorm_undetermined_layout = QVBoxLayout()
+        self.symmetry_box = QGroupBox()
+        self.symmetry_layout = QVBoxLayout()
         self.linear_box = QGroupBox()
         self.linear_layout = QVBoxLayout()
         self.annular_box = QGroupBox()
         self.annular_layout = QVBoxLayout() 
-        self.corymbiform_box = QGroupBox()
-        self.corymbiform_layout = QVBoxLayout() 
+        self.clustered_box = QGroupBox()
+        self.clustered_layout = QVBoxLayout() 
         self.reticular_box = QGroupBox()
         self.reticular_layout = QVBoxLayout()         
         
@@ -322,20 +311,12 @@ class Window(QDialog):
         
         self.omvang_grootte_undetermined_box = QGroupBox()
         self.omvang_grootte_undetermined_layout = QVBoxLayout()
-        self.millar_box = QGroupBox()
-        self.millar_layout = QVBoxLayout()  
-        self.lenticular_box = QGroupBox()
-        self.lenticular_layout = QVBoxLayout()  
-        self.nummular_box = QGroupBox()
-        self.nummular_layout = QVBoxLayout()  
-        self.child_palm_sized_box = QGroupBox()
-        self.child_palm_sized_layout = QVBoxLayout()  
-        self.palm_sized_box = QGroupBox()
-        self.palm_sized_layout = QVBoxLayout()  
-        self.regional_box = QGroupBox()
-        self.regional_layout = QVBoxLayout()  
-        self.generalised_box = QGroupBox()
-        self.generalised_layout = QVBoxLayout()        
+        self.small_box = QGroupBox()
+        self.small_layout = QVBoxLayout()  
+        self.large_box = QGroupBox()
+        self.large_layout = QVBoxLayout() 
+        self.generalised_omvang_box = QGroupBox()
+        self.generalised_omvang_layout = QVBoxLayout()        
         
         self.build_combobox(self.omvang_grootte_combobox, self.provoke_dict["Omvang grootte"]["data_dict"].keys())
         
@@ -381,14 +362,12 @@ class Window(QDialog):
         
         self.vorm_vorm_undetermined_box = QGroupBox()
         self.vorm_vorm_undetermined_layout = QVBoxLayout()  
-        self.polycyclic_box = QGroupBox()
-        self.polycyclic_layout = QVBoxLayout()
-        self.polygonal_box = QGroupBox()
-        self.polygonal_layout = QVBoxLayout()   
+        self.circular_box = QGroupBox()
+        self.circular_layout = QVBoxLayout()
+        self.rectangular_box = QGroupBox()
+        self.rectangular_layout = QVBoxLayout()   
         self.linear_vorm_box = QGroupBox()
-        self.linear_vorm_layout = QVBoxLayout()   
-        self.dendritic_box = QGroupBox()
-        self.dendritic_layout = QVBoxLayout()     
+        self.linear_vorm_layout = QVBoxLayout()      
         self.capricious_box = QGroupBox()
         self.capricious_layout = QVBoxLayout()    
         
@@ -405,16 +384,14 @@ class Window(QDialog):
         
         self.vorm_textuur_undetermined_box = QGroupBox()
         self.vorm_textuur_undetermined_layout = QVBoxLayout()  
-        self.not_raised_box = QGroupBox()
-        self.not_raised_layout = QVBoxLayout()
+        self.elevation_box = QGroupBox()
+        self.elevation_layout = QVBoxLayout()
         self.flat_box = QGroupBox()
         self.flat_layout = QVBoxLayout()   
-        self.hemispheric_box = QGroupBox()
-        self.hemispheric_layout = QVBoxLayout()   
-        self.sharp_vorm_box = QGroupBox()
-        self.sharp_vorm_layout = QVBoxLayout()     
-        self.stemmed_box = QGroupBox()
-        self.stemmed_layout = QVBoxLayout()      
+        self.bulbous_box = QGroupBox()
+        self.bulbous_layout = QVBoxLayout()   
+        self.tall_vorm_box = QGroupBox()
+        self.tall_vorm_layout = QVBoxLayout()     
         
         self.build_combobox(self.vorm_textuur_combobox, self.provoke_dict["Vorm textuur"]["data_dict"].keys())
         
@@ -435,10 +412,8 @@ class Window(QDialog):
         self.omtrek_undetermined_layout = QVBoxLayout()  
         self.sharp_box = QGroupBox()
         self.sharp_layout = QVBoxLayout()
-        self.medium_sharp_box = QGroupBox()
-        self.medium_sharp_layout = QVBoxLayout()   
-        self.unsharp_box = QGroupBox()
-        self.unsharp_layout = QVBoxLayout()      
+        self.coloured_outline_box = QGroupBox()
+        self.coloured_outline_layout = QVBoxLayout()       
         
         self.build_combobox(self.omtrek_combobox, self.provoke_dict["Omtrek"]["data_dict"].keys())
         
@@ -477,20 +452,16 @@ class Window(QDialog):
         
         self.efflorescentie_undetermined_box = QGroupBox()
         self.efflorescentie_undetermined_layout = QVBoxLayout()
-        self.squama_box = QGroupBox()
-        self.squama_layout = QVBoxLayout()
-        self.bloeduistorting_box = QGroupBox()
-        self.bloeduistorting_layout = QVBoxLayout() 
-        self.skin_defect_box = QGroupBox()
-        self.skin_defect_layout = QVBoxLayout() 
-        self.skin_thickening_box = QGroupBox()
-        self.skin_thickening_layout = QVBoxLayout() 
-        self.bump_on_skin_box = QGroupBox()
-        self.bump_on_skin_layout = QVBoxLayout() 
-        self.unraised_defects_box = QGroupBox()
-        self.unraised_defects_layout = QVBoxLayout() 
-        self.crusta_box = QGroupBox()
-        self.crusta_layout = QVBoxLayout()     
+        self.rough_box = QGroupBox()
+        self.rough_layout = QVBoxLayout()
+        self.depressed_box = QGroupBox()
+        self.depressed_layout = QVBoxLayout() 
+        self.flat_lesions_box = QGroupBox()
+        self.flat_lesions_layout = QVBoxLayout() 
+        self.bulbous_lesion_box = QGroupBox()
+        self.bulbous_lesions_layout = QVBoxLayout() 
+        self.level_box = QGroupBox()
+        self.level_layout = QVBoxLayout()   
         
         self.build_combobox(self.efflorescentie_combobox, self.provoke_dict["Efflorescentie"]["data_dict"].keys())
         
@@ -513,42 +484,33 @@ class Window(QDialog):
                                                         "Brown" : [self.brown_box, self.brown_layout, self.kleur_stacked],
                                                         "Abnormal colours" : [self.abnormal_colours_box, self.abnormal_colours_layout, self.kleur_stacked]},
                              "Efflorescentie" : {       "Undetermined" : [self.efflorescentie_undetermined_box, self.efflorescentie_undetermined_layout, self.efflorescentie_stacked],
-                                                        "Squama" : [self.squama_box, self.squama_layout, self.efflorescentie_stacked],
-                                                        "Bloeduitstorting" : [self.bloeduistorting_box, self.bloeduistorting_layout, self.efflorescentie_stacked],
-                                                        "Skin defect" : [self.skin_defect_box, self.skin_defect_layout, self.efflorescentie_stacked],
-                                                        "Skin thickening" : [self.skin_thickening_box, self.skin_thickening_layout, self.efflorescentie_stacked],
-                                                        "Bump on skin" : [self.bump_on_skin_box, self.bump_on_skin_layout, self.efflorescentie_stacked],
-                                                        "Unraised defects" : [self.unraised_defects_box, self.unraised_defects_layout, self.efflorescentie_stacked],
-                                                        "Crusta" : [self.crusta_box, self.crusta_layout, self.efflorescentie_stacked]},
+                                                        "Rough lesions" : [self.rough_box, self.rough_layout, self.efflorescentie_stacked],
+                                                        "Depressed lesions" : [self.depressed_box, self.depressed_layout, self.efflorescentie_stacked],
+                                                        "Elevated lesions" : [self.flat_lesions_box, self.flat_lesions_layout, self.efflorescentie_stacked],
+                                                        "Bulbous lesions" : [self.bulbous_lesion_box, self.bulbous_lesions_layout, self.efflorescentie_stacked],
+                                                        "Level lesions" : [self.level_box, self.level_layout, self.efflorescentie_stacked]},
                              "Omvang grootte" : {       "Undetermined" : [self.omvang_grootte_undetermined_box, self.omvang_grootte_undetermined_layout, self.omvang_grootte_stacked],
-                                                        "Millar" : [self.millar_box, self.millar_layout, self.omvang_grootte_stacked],
-                                                        "Lenticular" : [self.lenticular_box, self.lenticular_layout, self.omvang_grootte_stacked],
-                                                        "Nummular" : [self.nummular_box, self.nummular_layout, self.omvang_grootte_stacked],
-                                                        "Child palm sized" : [self.child_palm_sized_box, self.child_palm_sized_layout, self.omvang_grootte_stacked],
-                                                        "Palm sized" : [self.palm_sized_box, self.palm_sized_layout, self.omvang_grootte_stacked],
-                                                        "Regional" : [self.regional_box, self.regional_layout, self.omvang_grootte_stacked],
-                                                        "Generalised" : [self.generalised_box, self.generalised_layout, self.omvang_grootte_stacked]},
+                                                        "Small" : [self.small_box, self.small_layout, self.omvang_grootte_stacked],
+                                                        "Large" : [self.large_box, self.large_layout, self.omvang_grootte_stacked],
+                                                        "Generalised" : [self.generalised_omvang_box, self.generalised_omvang_layout, self.omvang_grootte_stacked]},
                              "Omvang aantal" : {        "Undetermined" : [self.omvang_aantal_undetermined_box, self.omvang_aantal_undetermined_layout, self.omvang_aantal_stacked],
                                                         "One" : [self.one_box, self.one_layout, self.omvang_aantal_stacked],
                                                         "Few" : [self.few_box, self.few_layout, self.omvang_aantal_stacked],
                                                         "Tens" : [self.tens_box, self.tens_layout, self.omvang_aantal_stacked],
                                                         "Innumerable" : [self.innumerable_box, self.innumerable_layout, self.omvang_aantal_stacked]},
                              "Omtrek" : {               "Undetermined" : [self.omtrek_undetermined_box, self.omtrek_undetermined_layout, self.omtrek_stacked],
-                                                        "Sharp" : [self.sharp_box, self.sharp_layout, self.omtrek_stacked],
-                                                        "Medium sharp" : [self.medium_sharp_box, self.medium_sharp_layout, self.omtrek_stacked],
-                                                        "Unsharp" : [self.unsharp_box, self.unsharp_layout, self.omtrek_stacked]},
+                                                        "Sharpness" : [self.sharp_box, self.sharp_layout, self.omtrek_stacked],
+                                                        "Colouration" : [self.coloured_outline_box, self.coloured_outline_layout, self.omtrek_stacked]},
                              "Vorm vorm" : {            "Undetermined" : [self.vorm_vorm_undetermined_box, self.vorm_vorm_undetermined_layout, self.vorm_vorm_stacked],
-                                                        "Polycyclic" : [self.polycyclic_box, self.polycyclic_layout, self.vorm_vorm_stacked],
-                                                        "Polygonal" : [self.polygonal_box, self.polygonal_layout, self.vorm_vorm_stacked],
+                                                        "Circular" : [self.circular_box, self.circular_layout, self.vorm_vorm_stacked],
+                                                        "Rectangular" : [self.rectangular_box, self.rectangular_layout, self.vorm_vorm_stacked],
                                                         "Linear" : [self.linear_vorm_box, self.linear_vorm_layout, self.vorm_vorm_stacked],
-                                                        "Dendritic" : [self.dendritic_box, self.dendritic_layout, self.vorm_vorm_stacked],
                                                         "Capricious" : [self.capricious_box, self.capricious_layout, self.vorm_vorm_stacked]},
                              "Vorm textuur" : {         "Undetermined" : [self.vorm_textuur_undetermined_box, self.vorm_textuur_undetermined_layout, self.vorm_textuur_stacked],
-                                                        "Not raised" : [self.not_raised_box, self.not_raised_layout, self.vorm_textuur_stacked],
+                                                        "Elevation" : [self.elevation_box, self.elevation_layout, self.vorm_textuur_stacked],
                                                         "Flat" : [self.flat_box, self.flat_layout, self.vorm_textuur_stacked],
-                                                        "Hemispheric" : [self.hemispheric_box, self.hemispheric_layout, self.vorm_textuur_stacked],
-                                                        "Sharp" : [self.sharp_vorm_box, self.sharp_vorm_layout, self.vorm_textuur_stacked],
-                                                        "Stemmed" : [self.stemmed_box, self.stemmed_layout, self.vorm_textuur_stacked]},
+                                                        "Bulbous" : [self.bulbous_box, self.bulbous_layout, self.vorm_textuur_stacked],
+                                                        "Tall" : [self.tall_vorm_box, self.tall_vorm_layout, self.vorm_textuur_stacked]},
                              "Rangschikking groep" : {  "Undetermined" : [self.rangschikking_groep_undetermined_box, self.rangschikking_groep_undetermined_layout, self.rangschikking_groep_stacked],
                                                         "Solitary" : [self.solitary_box, self.solitary_layout, self.rangschikking_groep_stacked],
                                                         "Grouped" : [self.grouped_box, self.grouped_layout, self.rangschikking_groep_stacked]},
@@ -557,9 +519,10 @@ class Window(QDialog):
                                                         "Generalised" : [self.generalised_box, self.generalised_layout, self.rangschikking_plaats_stacked],
                                                         "Follicular" : [self.follicular_box, self.follicular_layout, self.rangschikking_plaats_stacked]},
                              "Rangschikking vorm" : {   "Undetermined" : [self.rangschikking_vorm_undetermined_box, self.rangschikking_vorm_undetermined_layout, self.rangschikking_vorm_stacked],
+                                                        "Symmetry" : [self.symmetry_box, self.symmetry_layout, self.rangschikking_vorm_stacked],
                                                         "Linear" : [self.linear_box, self.linear_layout, self.rangschikking_vorm_stacked],
                                                         "Annular" : [self.annular_box, self.annular_layout, self.rangschikking_vorm_stacked],
-                                                        "Corymbiform" : [self.corymbiform_box, self.corymbiform_layout, self.rangschikking_vorm_stacked],
+                                                        "Clustered" : [self.clustered_box, self.clustered_layout, self.rangschikking_vorm_stacked],
                                                         "Reticular" : [self.reticular_box, self.reticular_layout, self.rangschikking_vorm_stacked]}
                                                         }
               
@@ -576,9 +539,9 @@ class Window(QDialog):
         main_layout = QHBoxLayout()
         main_box = QGroupBox()
         main_box.setLayout(main_layout)
-        main_layout.addWidget(provoke_label_box)
-        main_layout.addWidget(self.canvas)
-        main_layout.addWidget(right_box)
+        main_layout.addWidget(provoke_label_box, 40)
+        main_layout.addWidget(self.canvas, 40)
+        main_layout.addWidget(right_box, 20)
         
         # ADDING THE BOXES TO THE MAIN LAYOUT
         window_layout.addWidget(main_box,80)
@@ -605,6 +568,12 @@ class Window(QDialog):
         # Start 
         self.init_step()
         self.showMaximized()
+        
+    def go_to(self):
+        self.save_and_reset()
+            
+        self.im = int(self.textbox.text())
+        self.render_image()
         
     def build_combobox(self, combobox, list):        
         for item in list:
@@ -676,6 +645,7 @@ class Window(QDialog):
     
     def next(self):
         self.save_and_reset()
+            
         self.im += 1
         self.render_image()
         
@@ -685,6 +655,7 @@ class Window(QDialog):
         
     def back(self):
         self.save_and_reset()
+        
         self.im += -1
         self.render_image()
         
@@ -692,19 +663,20 @@ class Window(QDialog):
         print("Saving and resetting the figure...")
         self.save_colours_local()
         self.save_provoke_local()
+        self.reset_provoke_local()
         # print(self.reg_array)
         self.figure.clear()
         self.reg_array[self.reg_array != 0] = 0
         
     def render_image(self):
         # clearing and printing
-        self.figure.suptitle('IM_'+ str(self.im))
+        self.figure.suptitle(self.wb["ID"][self.im - 1])
    
         # create an axis
         self.ax = self.figure.add_subplot(111)
    
         # plot data
-        img = mpimg.imread(self.path + 'IM_'+ str(self.im) + '.jpg')
+        img = mpimg.imread(self.path + self.wb["ID"][self.im - 1] + '.jpg')
         self.ax.imshow(img, extent=[0, 50, 0, 50])
         
         self.ax.set_xticks(self.x, labels="")
@@ -720,7 +692,7 @@ class Window(QDialog):
         # refresh canvas
         self.canvas.draw()
         
-        print("IM_" + str(self.im) + ": Image rendered")
+        print(self.wb["ID"][self.im - 1] + ": Image rendered")
         
     def draw_existing_colours(self):
         for r in range(0,10):
@@ -739,28 +711,33 @@ class Window(QDialog):
                         self.ax.add_patch(Rectangle((x_pos, y_pos), width=5, height=5, color=rec_col, alpha=0.2))  
                         self.ax.figure.canvas.draw()
                         
-        print("IM_" + str(self.im) + ": Colours drawn")
+        print(self.wb["ID"][self.im - 1] + ": Colours drawn")
    
     def save_colours_local(self):
         reg_array_reshaped_list = self.reg_array.reshape((100)).tolist()
         self.wb['Interest_boxes'][self.im - 1] = str(reg_array_reshaped_list)
         
-        print("IM_" + str(self.im) + ": Colours saved")
+        print(self.wb["ID"][self.im - 1] + ": Colours saved")
         
     def close_app(self):
-        self.save_and_reset()
         print("Trying to save to Excel...")
-        self.wb.to_excel(self.base_path + "fitzpatrick17k-amin-annotation.xlsx")
-        print("Saved to Excel")
-        print("Closing application...")
-        self.close()
-        print("Application closed correctly!")
+        try:
+            self.save_colours_local()
+            self.save_provoke_local()
+            self.wb.to_excel(self.base_path + "fitzpatrick17k-amin-annotation.xlsx")
+            print("Saved to Excel")
+            print("Closing application...")
+            self.close()
+            print("Application closed correctly!")
+        except PermissionError:
+            print("First, close Excel; see interface")
+            self.instructions_label.setText("Close Excel before saving!!!")
         
     def check_colours(self):        
         interest_box = self.wb['Interest_boxes'][self.im - 1]
         
         if isinstance(interest_box,str) and '[' in interest_box:
-            print("IM_" + str(self.im) + ": Colours retrieved")
+            print(self.wb["ID"][self.im - 1] + ": Colours retrieved")
             
             self.reg_array = np.asarray(interest_box.strip("[").strip("]").split(",")).reshape((10,10)).astype(float)
             
@@ -820,7 +797,9 @@ class Window(QDialog):
         for key in self.provoke_dict.keys():
             self.wb[key][self.im - 1] = str(self.provoke_dict[key]["Selected"])
         
-        print("IM_" + str(self.im) + ": PROVOKE saved")
+        print(self.wb["ID"][self.im - 1] + ": PROVOKE saved")
+        
+    def reset_provoke_local(self):
         
         for checkbox in self.checkbox_list:
             checkbox[2].setChecked(False)
@@ -834,12 +813,12 @@ class Window(QDialog):
             provoke_temp = self.wb[key][self.im - 1]
             if isinstance(provoke_temp,str) and len(eval(str(provoke_temp))) > 0: 
                 self.update_checkboxes(eval(str(provoke_temp)),key)
-                print("IM_" + str(self.im) + ": " + str(key) + " retrieved")
+                print(self.wb["ID"][self.im - 1] + ": " + str(key) + " retrieved")
             else:
                 self.provoke_dict[key]["Selected"] = []
-                print("IM_" + str(self.im) + ": no " + str(key) + " found")
+                print(self.wb["ID"][self.im - 1] + ": no " + str(key) + " found")
                 
-        print("IM_" + str(self.im) + ": PROVOKE set")
+        print(self.wb["ID"][self.im - 1] + ": PROVOKE set")
         
     def update_checkboxes(self, new_dict,key):
         for item in new_dict:

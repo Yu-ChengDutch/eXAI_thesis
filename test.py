@@ -1,70 +1,43 @@
 import sys
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, QLineEdit, QMessageBox
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import pyqtSlot
 
-class stackedExample(QWidget):
+class App(QMainWindow):
 
-   def __init__(self):
-      super(stackedExample, self).__init__()
-		self.leftlist = QListWidget ()
-      self.leftlist.insertItem (0, 'Contact' )
-      self.leftlist.insertItem (1, 'Personal' )
-      self.leftlist.insertItem (2, 'Educational' )
-		
-      self.stack1 = QWidget()
-      self.stack2 = QWidget()
-      self.stack3 = QWidget()
-		
-      self.stack1UI()
-      self.stack2UI()
-      self.stack3UI()
-		
-      self.Stack = QStackedWidget (self)
-      self.Stack.addWidget (self.stack1)
-      self.Stack.addWidget (self.stack2)
-      self.Stack.addWidget (self.stack3)
-		
-      hbox = QHBoxLayout(self)
-      hbox.addWidget(self.leftlist)
-      hbox.addWidget(self.Stack)
+    def __init__(self):
+        super().__init__()
+        self.title = 'PyQt5 textbox - pythonspot.com'
+        self.left = 10
+        self.top = 10
+        self.width = 400
+        self.height = 140
+        self.initUI()
+    
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+    
+        # Create textbox
+        self.textbox = QLineEdit(self)
+        self.textbox.move(20, 20)
+        self.textbox.resize(280,40)
+        
+        # Create a button in the window
+        self.button = QPushButton('Show text', self)
+        self.button.move(20,80)
+        
+        # connect button to function on_click
+        self.button.clicked.connect(self.on_click)
+        self.show()
+    
+    @pyqtSlot()
+    def on_click(self):
+        textboxValue = self.textbox.text()
+        QMessageBox.question(self, 'Message - pythonspot.com', "You typed: " + textboxValue, QMessageBox.Ok, QMessageBox.Ok)
+        self.textbox.setText("")
 
-      self.setLayout(hbox)
-      self.leftlist.currentRowChanged.connect(self.display)
-      self.setGeometry(300, 50, 10,10)
-      self.setWindowTitle('StackedWidget demo')
-      self.show()
-		
-   def stack1UI(self):
-      layout = QFormLayout()
-      layout.addRow("Name",QLineEdit())
-      layout.addRow("Address",QLineEdit())
-      #self.setTabText(0,"Contact Details")
-      self.stack1.setLayout(layout)
-		
-   def stack2UI(self):
-      layout = QFormLayout()
-      sex = QHBoxLayout()
-      sex.addWidget(QRadioButton("Male"))
-      sex.addWidget(QRadioButton("Female"))
-      layout.addRow(QLabel("Sex"),sex)
-      layout.addRow("Date of Birth",QLineEdit())
-		
-      self.stack2.setLayout(layout)
-		
-   def stack3UI(self):
-      layout = QHBoxLayout()
-      layout.addWidget(QLabel("subjects"))
-      layout.addWidget(QCheckBox("Physics"))
-      layout.addWidget(QCheckBox("Maths"))
-      self.stack3.setLayout(layout)
-		
-   def display(self,i):
-      self.Stack.setCurrentIndex(i)
-		
-def main():
-   app = QApplication(sys.argv)
-   ex = stackedExample()
-   sys.exit(app.exec_())
-	
 if __name__ == '__main__':
-   main()
+    app = QApplication(sys.argv)
+    ex = App()
+    sys.exit(app.exec_())
