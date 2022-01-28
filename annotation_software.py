@@ -697,20 +697,13 @@ class Window(QDialog):
     def draw_existing_colours(self):
         for r in range(0,10):
                 for c in range(0,10):
-                    if self.reg_array[r,c] != 0:
-                        value = self.reg_array[r,c]
-                        x_pos = self.x[c + 1] - 5
-                        y_pos = self.x[10 - r] - 5
-                        if value == 10.0:
-                            # Lesion
-                            rec_col = 'red'
-                        elif value == -10.0:
-                            # Background
-                            rec_col = 'blue'
-                            
-                        self.ax.add_patch(Rectangle((x_pos, y_pos), width=5, height=5, color=rec_col, alpha=0.2))  
+                    if self.reg_array[r,c] == 10:
+                        self.ax.add_patch(Rectangle((self.x[c + 1] - 5, self.x[10 - r] - 5), width=5, height=5, color='red', alpha=0.2))  
                         self.ax.figure.canvas.draw()
-                        
+                    elif self.reg_array[r,c] == -10:
+                        self.ax.add_patch(Rectangle((self.x[c + 1] - 5, self.x[10 - r] - 5), width=5, height=5, color='blue', alpha=0.2))  
+                        self.ax.figure.canvas.draw()
+                            
         print(self.wb["ID"][self.im - 1] + ": Colours drawn")
    
     def save_colours_local(self):
@@ -754,7 +747,7 @@ class Window(QDialog):
                 # Background
                 rec_col = 'blue'
                 value = -10   
-            if event.button is MouseButton.RIGHT:
+            elif event.button is MouseButton.RIGHT:
                 # Lesion
                 rec_col = 'red'
                 value = 10
@@ -785,11 +778,11 @@ class Window(QDialog):
                 self.reg_array[row, col] = value
             elif self.reg_array[row, col] == value:
                 self.reg_array[row, col] = 0
-                self.show_bool = True
+                # self.show_bool = True
                 self.reload()
             elif self.reg_array[row, col] != value:
                 self.reg_array[row, col] = value
-                self.show_bool = True
+                # self.show_bool = True
                 self.reload()
                             
     def save_provoke_local(self):
