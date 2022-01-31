@@ -571,7 +571,7 @@ class Window(QDialog):
         
     def go_to(self):
         self.save_and_reset()
-            
+        self.show_bool = False    
         self.im = int(self.textbox.text())
         self.render_image()
         
@@ -687,6 +687,7 @@ class Window(QDialog):
         
         # Adding the colours
         self.check_colours()
+        print(self.show_bool)
         self.check_provoke()
         
         # refresh canvas
@@ -695,8 +696,11 @@ class Window(QDialog):
         print(self.wb["ID"][self.im - 1] + ": Image rendered")
         
     def draw_existing_colours(self):
+        print("Drawing colours...")
         for r in range(0,10):
                 for c in range(0,10):
+                    self.delete_last_line()
+                    print("Drawing " + str(r) + str(c) + " out of 100")
                     if self.reg_array[r,c] == 10:
                         self.ax.add_patch(Rectangle((self.x[c + 1] - 5, self.x[10 - r] - 5), width=5, height=5, color='red', alpha=0.2))  
                         self.ax.figure.canvas.draw()
@@ -729,10 +733,10 @@ class Window(QDialog):
     def check_colours(self):        
         interest_box = self.wb['Interest_boxes'][self.im - 1]
         
-        if isinstance(interest_box,str) and '[' in interest_box:
+        if isinstance(interest_box,str):
             print(self.wb["ID"][self.im - 1] + ": Colours retrieved")
             
-            self.reg_array = np.asarray(interest_box.strip("[").strip("]").split(",")).reshape((10,10)).astype(float)
+            self.reg_array = np.asarray(eval(str(interest_box))).reshape((10,10)).astype(float)
             
             if self.show_bool == True:
                 self.draw_existing_colours()
@@ -829,6 +833,14 @@ class Window(QDialog):
             self.show_button.setText("Show colours")
             
         self.reload()
+
+    def delete_last_line(self):
+
+        #cursor up one line
+        sys.stdout.write('\x1b[1A')
+
+        #delete last line
+        sys.stdout.write('\x1b[2K')
                                                      
 # driver code
 if __name__ == '__main__':
